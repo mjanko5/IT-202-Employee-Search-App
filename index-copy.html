@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!––css-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+    <input id="txtDepartment" value="POLICE" type="text" placeholder="Enter Department">
+    <button id="btnSearch" type="submit">Search</button>    
+    
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+        var endpoint = "https://data.cityofchicago.org/resource/xzkq-xp2w.json"
+        var employeeData;
+        $(document).ready(function() {
+            
+            //CLICK THE BUTTON
+            $("#btnSearch").on("click", function(e) {
+                //1
+                $.get(endpoint + "?department=" + $("#txtDepartment").val(), function(response) {
+                    employeeData = response;
+                    $.each(response, function(i, v) {
+                        var p = $("<p>");
+                        p.addClass("employeeName");
+                        p.text(v.name);
+                        $("body").append(p);
+                    });
+                });
+                //2
+                console.log("clicked search button");
+                console.log(employeeData);
+            });
+            
+            //CLICK RESPONSE <P>
+            $("body").on("click", "p.employeeName", function(e) {            
+                
+                // get text of clicked element
+                var empName = $(this).text();
+                
+                // find emp in array
+                var emp = employeeData.filter(function(item){
+                    return item.name == empName;
+                });
+                
+                
+                $.get(endpoint + "?department=" + $("#txtDepartment").val(), function(response) {
+                    $.each(response, function(i, v) {
+                        if(v.name == empName){
+                            console.log("name: " + v.name + ", department: " + v.department + ", job titles: " + v.job_titles);
+                        }
+                    });
+                });
+                
+                
+                // update detail
+                
+                
+                // display detail
+               
+            });
+        });
+    </script>
+
+</body>
+
+</html>
